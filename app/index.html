@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<div lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+
+    <title>DS18B20 - Grid</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="bower_components/paper-slider/paper-slider.html">
+    <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
+    <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+    <link rel="import" href="bower_components/paper-card/paper-card.html">
+    <link rel="import" href="bower_components/paper-tooltip/paper-tooltip.html">
+    <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+
+    <style>
+        tr{
+            height:22px;
+        }
+        td{
+            width:30px;
+            font-size: xx-small;
+            text-align: center;
+            margin:auto;
+            vertical-align: middle;
+            padding:15px
+        }
+        span{
+            border-radius:30px;
+            cursor:pointer;
+        }
+        span#min_temp{
+            font-weight:bolder;
+            color:lightblue;
+        }
+        span#max_temp{
+            font-weight:bolder;
+            color:#f44336;
+        }
+    </style>
+
+    <script>var ws,min=30,max=110</script>
+    </head>
+<body style="background:rgba(0,0,0,1);" full bleed unresolved>
+     <style is="custom-style">
+
+         paper-checkbox.red {
+            --paper-checkbox-checked-color: var(--paper-red-500);
+            --paper-checkbox-checked-ink-color: var(--paper-red-500);
+            --paper-checkbox-unchecked-color: var(--paper-red-900);
+            --paper-checkbox-unchecked-ink-color: var(--paper-red-900);
+            --paper-checkbox-label-color: var(--paper-red-500);
+        }
+        paper-checkbox.white {
+            --paper-checkbox-label-color: white;
+            --paper-checkbox-unchecked-color:white;
+        }
+        paper-slider.red{
+            --paper-slider-active-color:var(--paper-red-500);
+        }
+        paper-slider.blue{
+            --paper-slider-active-color:var(--paper-bluea-500);
+        }
+        paper-slider{
+             --paper-slider-height:8px;
+             left-margin:10px;
+            --paper-slider-diameter:15px;
+        }
+
+    </style>
+    <paper-toolbar class="horizontal layout">
+            <div class="flex"></div>
+            <paper-checkbox class="white">Relative</paper-checkbox>
+            <paper-slider id="min_slider" pin min="30" max="70" value="30" class="blue">Min</paper-slider>
+            <span id="min_slider_lbl"></span>
+            <paper-slider id="max_slider" pin min="30" max="110" value="110" class="red">Max</paper-slider>
+            <span id="max_slider_lbl"></span>
+            <div class="flex"></div>
+    </paper-toolbar>
+     <div>
+         <div style="width:30%;vertical-align:top;font-size:large; color:white; ">
+             <div>CPU Temp: <span id="cpu_temp"></span></div>
+             <div>Max Temp: <span id="max_temp"></span></div>
+            <div>Min Temp: <span id="min_temp"></span></div>
+            <div>Sensor Updates/Sec: <span id="wsmps"></span></div>
+         </div>
+        <div>
+            <table style="margin:auto;text-align:center;color:white;padding-top:35px;">
+                <tr class="row_0">
+                     <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_1">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_2">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_3">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_4">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_5">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_6">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_7">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+                <tr class="row_8">
+                    <td class="bus_1"></td>
+                    <td class="bus_2"></td>
+                    <td class="bus_3"></td>
+                    <td class="bus_4"></td>
+                    <td class="bus_5"></td>
+                    <td class="bus_6"></td>
+                    <td class="bus_7"></td>
+                    <td class="bus_8"></td>
+                    <td class="bus_9"></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <script>
+        var temps = new Array();
+        use_relative=false;
+        var sensor_updates = 0;
+        var interval;
+        now = function(){ return new Date().getTime();};
+        var fps = {
+            startTime : 0,
+            frameNumber : 0,
+            getFPS : function(){
+                this.frameNumber++;
+                var d = new Date().getTime(),
+                currentTime = ( d - this.startTime ) / 1000,
+                result = Math.floor( ( this.frameNumber / currentTime ) );
+                if( currentTime > 1 ){
+                    this.startTime = new Date().getTime();
+                    this.frameNumber = 0;
+                }
+            return result;
+            }
+        };
+
+        function connect(){
+            ws = new WebSocket('ws://wa.reesfamily12.com:9000/ws');
+            ws.onopen = function(event){
+                console.log('opened')
+                last_second = (new Date().getTime())
+            }
+            ws.onmessage = function(event){
+                //console.log(event.data);
+                data = JSON.parse(event.data);
+                parseData(data);
+            }
+            ws.onclose = function(event){
+                setTimeout(connect, 10000);
+            }
+        }
+        function count(){
+            $('#wsmps').html(sensor_updates);
+            sensor_updates = 0;
+        }
+        window.addEventListener('WebComponentsReady', function(e) {
+            connect();
+            interval = setInterval(count,1000);
+            $('#max').html(max);
+            $('#min').html(min);
+            $('#min_slider_lbl').html(min);
+            $('#max_slider_lbl').html(max);
+            $('button').on('click',function(){
+                ws.send(JSON.stringify(
+                                {"bus_num":this.id.split('_')[1],"bus":$(this).html()})
+                );
+            });
+            console.log('Components are ready');
+            $('paper-slider').on('change',function(){
+                if(this.id=="max_slider")
+                    max = this.value;
+                else
+                    min = this.value;
+
+                $('#min_slider_lbl').html(min);
+                $('#max_slider_lbl').html(max);
+            });
+            $('paper-checkbox').on('change',function(){
+                use_relative = this.checked;
+                //if(!use_relative){
+                //    max=$('#max_slider').get(0).value;
+                //    min=$('#min_slider').get(0).value;
+                //}
+            });
+        });
+        function parseData(data){
+
+            if($.isArray(data)){
+                $.each(data, putData);
+            }
+            else
+                putData(0, data);
+        }
+
+        function putData(index,data){
+            if(Object.keys(data).indexOf("Pos")!=-1){
+                sensor_updates++;
+                row_class = ".row_" + (data.Pos - 1);
+                col_class = " .bus_" + data.Bus;
+                temperature = Math.round(data.Temperature * 100) / 100;
+                pos = (parseInt(data.Pos) * 9) + parseInt(data.Bus);
+                temps[pos - 10] = temperature;
+                sorted = $(temps).sort();
+                $('#max_temp').html(sorted[sorted.length - 1]);
+                $('#min_temp').html(sorted[0]);
+
+                if(use_relative){
+                    max = sorted[sorted.length - 1];
+                    min = sorted[0];
+                    $('#max_slider').get(0).value = max;
+                    $('#min_slider').get(0).value = min;
+                    $('#min_slider_lbl').html(min);
+                    $('#max_slider_lbl').html(max);
+                }
+                color = colorIT((temperature - min) / (max - min));
+                id ='b'+data.Bus+'p'+data.Pos;
+                if($(row_class + col_class+' paper-tooltip').length==0)
+                    $(row_class + col_class).html('<paper-tooltip for="'+id+'">'+temperature+'</paper-tooltip><span id="'+id+'"></span>')
+                else{
+                    tooltip = $(row_class + col_class+' paper-tooltip').get(0);
+                    tooltip.$.tooltip.innerHTML=temperature
+               }
+                $(row_class + col_class + ' span').html(temperature).css("color","transparent");;
+                $(row_class + col_class + ' span').css('box-shadow', color + ' 0px 0px 40px 40px').css('background', color);
+            }
+            else{
+                for(key of Object.keys(data)){
+                    $('#'+key).html(data[key]);
+                }
+            }
+        }
+
+        function colorIT(value){
+            var RGB = {R: 0, G: 0, B: 0};
+            if(0 <= value && value <= 1 / 8){
+                RGB.R = 0;
+                RGB.G = 0;
+                RGB.B = 4 * value + .5; // .5 - 1 // b = 1/2
+            } else if(1 / 8 < value && value <= 3 / 8){
+                RGB.R = 0;
+                RGB.G = 4 * value - .5; // 0 - 1 // b = - 1/2
+                RGB.B = 1; // small fix
+            } else if(3 / 8 < value && value <= 5 / 8){
+                RGB.R = 4 * value - 1.5; // 0 - 1 // b = - 3/2
+                RGB.G = 1;
+                RGB.B = -4 * value + 2.5; // 1 - 0 // b = 5/2
+            } else if(5 / 8 < value && value <= 7 / 8){
+                RGB.R = 1;
+                RGB.G = -4 * value + 3.5; // 1 - 0 // b = 7/2
+                RGB.B = 0;
+            } else if(7 / 8 < value && value <= 1){
+                RGB.R = -4 * value + 4.5; // 1 - .5 // b = 9/2
+                RGB.G = 0;
+                RGB.B = 0;
+            } else{    // should never happen - value > 1
+                RGB.R = .5;
+                RGB.G = 0;
+                RGB.B = 0;
+            }
+            RGB.R *= 255;
+            RGB.G *= 255;
+            RGB.B *= 255;
+            return 'rgba(' + Math.round(RGB.R) + ',' + Math.round(RGB.G) + ',' + Math.round(RGB.B) + ',.8)';
+        }
+    </script>
+</bodydy>
+</html>
